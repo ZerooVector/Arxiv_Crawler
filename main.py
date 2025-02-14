@@ -49,7 +49,7 @@ if __name__ == "__main__":
         SummaryWriter.append_content(config.RESULT_DIRECTORY, f"## {paper_title}")
         SummaryWriter.append_content(config.RESULT_DIRECTORY, f"**下载地址**：{paper_url}")
         SummaryWriter.append_content(config.RESULT_DIRECTORY, f"**AI总结**： \n{summary_response}")
-        SummaryWriter.append_content(" ")
+        SummaryWriter.append_content(config.RESULT_DIRECTORY, "")
 
     for filename in os.listdir(config.PDF_DIRECTORY):
         file_path = os.path.join(config.PDF_DIRECTORY, filename)
