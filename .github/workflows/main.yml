@@ -1,0 +1,36 @@
+name: Python Application Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'  # 每天 00:00 UTC 触发一次
+  workflow_dispatch:  # 支持手动触发
+
+jobs:
+  run-main:
+    runs-on: ubuntu-latest
+
+    env:
+      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install arxiv python-dotenv openai PyPDF2 requests
+
+      - name: Run main.py
+        run: python main.py
