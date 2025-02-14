@@ -5,6 +5,9 @@ from PyPDF2 import PdfReader
 class PDFProcessor:
     @staticmethod
     def download_pdf(directory, arxiv_url):
+        if not os.path.exists(directory):
+            os.makedirs(directory, exist_ok=True)
+
         base = arxiv_url.split('/')[-1]
         if not base.endswith('.pdf'):
             base += '.pdf'
