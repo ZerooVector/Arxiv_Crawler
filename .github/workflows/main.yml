@@ -21,6 +21,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          # 默认情况下 checkout 会设置凭据，但为确保可以推送更改，
+          # 请打开 persist-credentials 选项（为 true）
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -34,3 +38,18 @@ jobs:
 
       - name: Run main.py
         run: python main.py
+
+      - name: Commit and push changes
+        run: |
+          # 配置 Git 用户信息
+          git config --global user.email "1286228956@qq.com"
+          git config --global user.name "ZerooVector"
+
+          # 添加所有更改
+          git add .
+
+          # 如果没有检测到更改，git commit 会返回非零状态，因此用 || echo 避免失败中断整个 workflow
+          git commit -m "Auto commit: update files from main.py" || echo "No changes to commit"
+
+          # 推送更改到主分支
+          git push origin main
