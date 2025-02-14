@@ -2,29 +2,29 @@ name: Python Application Workflow
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths-ignore:  # 避免循环触发 ▼
+      - 'result/**'
   pull_request:
-    branches:
-      - main
+    branches: [main]
   schedule:
-    - cron: '0 0 * * *'  # 每天 00:00 UTC 触发一次
-  workflow_dispatch:  # 支持手动触发
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   run-main:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write  # 必须的权限
     env:
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          # 默认情况下 checkout 会设置凭据，但为确保可以推送更改，
-          # 请打开 persist-credentials 选项（为 true）
           persist-credentials: true
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -41,15 +41,9 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          # 配置 Git 用户信息
-          git config --global user.email "1286228956@qq.com"
+          git config --global user.email "128622896@qq.com"
           git config --global user.name "ZerooVector"
-
-          # 添加所有更改
           git add .
-
-          # 如果没有检测到更改，git commit 会返回非零状态，因此用 || echo 避免失败中断整个 workflow
-          git commit -m "Auto commit: update files from main.py" || echo "No changes to commit"
-
-          # 推送更改到主分支
-          git push origin main
+          git commit -m "Auto commit: update files [skip ci]" || echo "No changes to commit"
+          git pull --rebase
+          git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
