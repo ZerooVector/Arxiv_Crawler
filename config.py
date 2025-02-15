@@ -14,7 +14,7 @@ class Config:
 
     # Arxiv搜索设置
     ARXIV_SEARCH_QUERY = "cat:cs.AI OR cat:cs.LG OR cat:cs.CL" 
-    ARXIV_SEARCH_DAYS = 1
+    ARXIV_SEARCH_DAYS = 2
     ARXIV_SEARCH_NUM = 200
 
     # LLM提示
